@@ -4,7 +4,7 @@ from auth_utils import login_user, register_user
 from client_utils import list_clients_utils, client_utils
 from aps_utils import wifi_ap_utils, list_aps_utils
 from dashboard import dashboard_utils, home_utils
-from db_utils import init_db
+from db_utils import init_db, get_client_movement
 
 route_blueprint = Blueprint('route', __name__)
 
@@ -69,3 +69,9 @@ def list_aps():
 @jwt_required()
 def list_clients():
     return list_clients_utils()
+
+@route_blueprint.route('/client/<int:client_id>/movement_history')
+@jwt_required()
+def client_movement_history(client_id):
+    movements = get_client_movement(client_id)
+    return render_template('client_movement_history.html', movements=movements)

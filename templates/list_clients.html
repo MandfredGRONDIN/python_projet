@@ -7,7 +7,10 @@
     <h1>Liste des Clients</h1>
     <ul>
         {% for client in clients %}
-            <li><a href="{{ url_for('route.client', client_id=client[0]) }}">{{ client[1] }} - {{ client[2] }}</a></li>
+            <li>
+                <a href="{{ url_for('route.client', client_id=client[0]) }}">{{ client[1] }} - {{ client[2] }}</a> 
+                (<a href="{{ url_for('route.client_movement_history', client_id=client[0]) }}">Voir l'historique de déplacement</a>)
+            </li>
         {% endfor %}
     </ul>
     <a href="{{ url_for('route.dashboard') }}">Retour au Dashboard</a>

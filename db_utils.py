@@ -52,11 +52,25 @@ def init_db():
     );
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS client_movements (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        client_id INT NOT NULL,
+        ap_id INT NOT NULL,
+        session_id INT NOT NULL,
+        movement_time DATETIME NOT NULL,
+        FOREIGN KEY (client_id) REFERENCES clients(id),
+        FOREIGN KEY (ap_id) REFERENCES wifi_access_points(id),
+        FOREIGN KEY (session_id) REFERENCES sessions(id)
+    );
+    """)
+
     conn.commit()
     cursor.close()
     conn.close()
 
     process_and_insert_sessions()
+    record_all_client_movements()
 
 def process_and_insert_sessions():
     from insert_db import analyser_fichier_csv, insert_session_into_db  
@@ -69,6 +83,34 @@ def process_and_insert_sessions():
         print("Sessions enregistrées dans la base de données.")
     else:
         print("Aucune session trouvée dans le fichier CSV.")
+
+def record_client_movement(client_id, ap_id, session_id, movement_time):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO client_movements (client_id, ap_id, session_id, movement_time) VALUES (%s, %s, %s, %s)",
+                   (client_id, ap_id, session_id, movement_time))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def record_all_client_movements():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT clients_sessions.client_id, sessions.ap_id, sessions.id, sessions.session_associated_time
+    FROM clients_sessions
+    JOIN sessions ON clients_sessions.session_id = sessions.id
+    """)
+
+    movements = cursor.fetchall()
+
+    for movement in movements:
+        client_id, ap_id, session_id, movement_time = movement
+        record_client_movement(client_id, ap_id, session_id, movement_time)
+
+    cursor.close()
+    conn.close()
 
 def get_ap_info(ap_id):
     conn = get_db_connection()
@@ -196,3 +238,21 @@ def get_dashboard_data():
     total_volume_upstream, total_volume_downstream = get_total_volume()
     total_volume = total_volume_upstream + total_volume_downstream
     return total_aps, total_clients, total_volume, total_volume_upstream, total_volume_downstream
+
+def get_client_movement(client_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT wifi_access_points.ap_name, client_movements.movement_time
+        FROM client_movements
+        JOIN wifi_access_points ON client_movements.ap_id = wifi_access_points.id
+        WHERE client_movements.client_id = %s
+        ORDER BY client_movements.movement_time ASC
+    """, (client_id,))
+
+    movements = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return movements

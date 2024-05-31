@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historique de déplacement du client</title>
+</head>
+<body>
+    <h1>Historique de déplacement du client</h1>
+    <ul>
+        {% for movement in movements %}
+            <li>Connecté à {{ movement[0] }} le {{ movement[1] }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('route.list_clients') }}">Retour au Clients</a>
+    <a href="{{ url_for('route.dashboard') }}">Retour au Dashboard</a>
+</body>
+</html>
