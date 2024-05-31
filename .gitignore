@@ -1,5 +1,2 @@
-# Ignore le dossier files
-files/
-
 # Ignore tous les dossiers __pycache__
 __pycache__/

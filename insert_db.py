@@ -1,7 +1,7 @@
 import mysql.connector
 import csv
 from datetime import datetime
-from db_utils import get_db_connection
+from db import get_db_connection
 
 class Session:
     def __init__(self, associated_time, duration, mac_address, host_name, device, os_type, upstream_transferred, downstream_transferred, connected_ap_name):

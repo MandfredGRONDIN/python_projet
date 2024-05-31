@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Inscription</title>
 </head>
 <body>
-    <h2>Register</h2>
+    <h2>Inscription</h2>
     <form action="/register" method="post">
-        <label for="username">Username:</label><br>
+        <label for="username">Nom d'utilisateur :</label><br>
         <input type="text" id="username" name="username"><br>
-        <label for="password">Password:</label><br>
+        <label for="password">Mot de passe :</label><br>
         <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Register">
+        <input type="submit" value="S'inscrire">
     </form>
+    <a href="{{ url_for('route.login') }}">Retour à la connexion</a>
 </body>
 </html>
