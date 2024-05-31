@@ -161,20 +161,38 @@ def get_client_info(client_id):
 
     return client_info
 
-def get_dashboard_data():
+def get_total_aps():
     conn = get_db_connection()
     cursor = conn.cursor()
-    
     cursor.execute("SELECT COUNT(*) FROM wifi_access_points")
     total_aps = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM clients")
-    total_clients = cursor.fetchone()[0]
-
-    cursor.execute("SELECT SUM(upstream_transferred + downstream_transferred) FROM sessions")
-    total_volume = cursor.fetchone()[0]
-
     cursor.close()
     conn.close()
+    return total_aps
 
-    return total_aps, total_clients, total_volume
+def get_total_clients():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM clients")
+    total_clients = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return total_clients
+
+def get_total_volume():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT SUM(upstream_transferred) FROM sessions")
+    total_volume_upstream = cursor.fetchone()[0]
+    cursor.execute("SELECT SUM(downstream_transferred) FROM sessions")
+    total_volume_downstream = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return total_volume_upstream, total_volume_downstream
+
+def get_dashboard_data():
+    total_aps = get_total_aps()
+    total_clients = get_total_clients()
+    total_volume_upstream, total_volume_downstream = get_total_volume()
+    total_volume = total_volume_upstream + total_volume_downstream
+    return total_aps, total_clients, total_volume, total_volume_upstream, total_volume_downstream

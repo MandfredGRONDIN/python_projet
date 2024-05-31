@@ -6,10 +6,12 @@
 <body>
     <h1>Dashboard de {{ username }}</h1>
     <p>Nombre de bornes : {{ total_aps }}</p>
-    <p>Nombre de clients : {{ total_clients }}</p>
-    <p>Volume total échangé : {{ total_volume }} bytes</p>
     <a href="{{ url_for('route.list_aps') }}">Lister les bornes WiFi</a><br>
+    <p>Nombre de clients : {{ total_clients }}</p>
     <a href="{{ url_for('route.list_clients') }}">Lister les clients</a>
+    <p>Volume total upstream échangé : {{ total_volume_upstream }} bytes</p>
+    <p>Volume total downstream échangé : {{ total_volume_downstream }} bytes</p>
+    <p>Volume total échangé : {{ total_volume }} bytes</p>
     <form action="/logout" method="post">
         <button type="submit">Déconnexion</button>
     </form>

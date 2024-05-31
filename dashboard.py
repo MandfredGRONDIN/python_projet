@@ -10,6 +10,6 @@ def home_utils():
 
 def dashboard_utils():
     username = session.get('username')
-    total_aps, total_clients, total_volume = get_dashboard_data()
+    total_aps, total_clients, total_volume, total_volume_upstream, total_volume_downstream = get_dashboard_data()
 
-    return render_template('dashboard.html', username=username, total_aps=total_aps, total_clients=total_clients, total_volume=total_volume)
+    return render_template('dashboard.html', username=username, total_aps=total_aps, total_clients=total_clients, total_volume=total_volume, total_volume_upstream=total_volume_upstream, total_volume_downstream=total_volume_downstream)
