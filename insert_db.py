@@ -79,8 +79,8 @@ def analyser_fichier_csv(nom_fichier):
                 host_name = row['Host Name']
                 device = row['Device']
                 os_type = row['OS Type']
-                upstream_transferred = int(row['Upstream Transferred (Bytes)'].replace(' ', '').replace(',', '').replace('.', ''))  
-                downstream_transferred = int(row['Downstream Transferred (Bytes)'].replace(' ', '').replace(',', '').replace('.', ''))  
+                upstream_transferred = int(row['Upstream Transferred (Bytes)'].replace(' ', '').replace(',', '.'))  
+                downstream_transferred = int(row['Downstream Transferred (Bytes)'].replace(' ', '').replace(',', '.'))  
                 connected_ap_name = row['Connected AP Name']
 
                 session = Session(associated_time, duration, mac_address, host_name, device, os_type, upstream_transferred, downstream_transferred, connected_ap_name)
