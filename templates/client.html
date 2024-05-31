@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Informations sur le Client</title>
+</head>
+<body>
+    <h1>Informations sur le Client</h1>
+    <p>Adresse MAC : {{ client_info[0] }}</p>
+    <p>Nom d'hôte : {{ client_info[1] }}</p>
+    <p>Appareil : {{ client_info[2] }}</p>
+    <p>Type de système d'exploitation : {{ client_info[3] }}</p>
+    <p>Durée totale de connexion : {{ client_info[4] }} secondes</p>
+    <p>Bornes connectées : {{ client_info[5] }}</p>
+    <p>Volume de données envoyées : {{ client_info[6] }} bytes</p>
+    <p>Volume de données reçues : {{ client_info[7] }} bytes</p>
+    <a href="{{ url_for('auth.list_clients') }}">Retour au Clients</a>
+    <a href="{{ url_for('auth.dashboard') }}">Retour au Dashboard</a>
+</body>
+</html>

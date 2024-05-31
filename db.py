@@ -1,20 +1,9 @@
-import mysql.connector
-
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'python'
-}
-
-def get_db_connection():
-    conn = mysql.connector.connect(**db_config)
-    return conn
+from db_utils import get_db_connection
 
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,7 +11,7 @@ def init_db():
         password VARCHAR(255) NOT NULL
     );
     """)
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS clients (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,14 +21,14 @@ def init_db():
         os_type VARCHAR(50) NOT NULL
     );
     """)
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS wifi_access_points (
         id INT AUTO_INCREMENT PRIMARY KEY,
         ap_name VARCHAR(100) NOT NULL UNIQUE
     );
     """)
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS sessions (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +40,7 @@ def init_db():
         FOREIGN KEY (ap_id) REFERENCES wifi_access_points(id)
     );
     """)
-    
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS clients_sessions (
         client_id INT NOT NULL,
@@ -65,3 +54,17 @@ def init_db():
     conn.commit()
     cursor.close()
     conn.close()
+
+    process_and_insert_sessions()
+
+def process_and_insert_sessions():
+    from insert_db import analyser_fichier_csv, insert_session_into_db  
+    nom_fichier_csv = './files/log_wifi_red_hot.csv'
+    sessions = analyser_fichier_csv(nom_fichier_csv)
+
+    if sessions:
+        for session in sessions:
+            insert_session_into_db(session)
+        print("Sessions enregistrées dans la base de données.")
+    else:
+        print("Aucune session trouvée dans le fichier CSV.")

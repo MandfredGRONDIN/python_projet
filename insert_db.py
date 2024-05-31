@@ -1,13 +1,7 @@
 import mysql.connector
 import csv
 from datetime import datetime
-
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'python'
-}
+from db_utils import get_db_connection
 
 class Session:
     def __init__(self, associated_time, duration, mac_address, host_name, device, os_type, upstream_transferred, downstream_transferred, connected_ap_name):
@@ -20,12 +14,9 @@ class Session:
         self.upstream_transferred = upstream_transferred
         self.downstream_transferred = downstream_transferred
         self.connected_ap_name = connected_ap_name
+    
     def __str__(self):
         return f"Associated Time: {self.associated_time}, Duration: {self.duration}, MAC Address: {self.mac_address}, Host Name: {self.host_name}, Device: {self.device}, OS Type: {self.os_type}, Upstream Transferred: {self.upstream_transferred}, Downstream Transferred: {self.downstream_transferred}, Connected AP Name: {self.connected_ap_name}"
-
-def get_db_connection():
-    conn = mysql.connector.connect(**db_config)
-    return conn
 
 def insert_session_into_db(session):
     cursor = None  
@@ -75,7 +66,6 @@ def insert_session_into_db(session):
         if conn:  
             conn.close()
 
-
 def analyser_fichier_csv(nom_fichier):
     sessions = []
 
@@ -101,13 +91,3 @@ def analyser_fichier_csv(nom_fichier):
         print(f"Erreur lors de l'analyse du fichier CSV : {e}")
 
     return sessions
-
-
-nom_fichier_csv = './files/log_wifi_red_hot.csv'
-sessions = analyser_fichier_csv(nom_fichier_csv)
-
-if sessions:
-    for session in sessions:
-        #print(session)
-        insert_session_into_db(session)
-    print("Sessions enregistrées dans la base de données.")
